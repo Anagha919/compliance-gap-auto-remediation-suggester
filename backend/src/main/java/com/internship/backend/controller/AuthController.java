@@ -1,6 +1,6 @@
 package com.internship.backend.controller;
 
-import com.internship.backend.config.config.JwtUtil;
+import com.internship.backend.config.JwtUtil;
 import com.internship.backend.entity.User;
 import com.internship.backend.service.AuthService;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -41,7 +41,10 @@ public class AuthController {
             throw new RuntimeException("Invalid credentials");
         }
 
-        String token = jwtUtil.generateToken(dbUser.getUsername());
+        String token = jwtUtil.generateToken(
+        dbUser.getUsername(),
+        dbUser.getRole()
+);
 
         return Map.of("token", token);
     }
@@ -53,7 +56,9 @@ public class AuthController {
         String token = header.replace("Bearer ", "");
         String username = jwtUtil.extractUsername(token);
 
-        String newToken = jwtUtil.generateToken(username);
+        String role = jwtUtil.extractRole(token);
+
+        String newToken = jwtUtil.generateToken(username, role);    
 
         return Map.of("token", newToken);
     }
