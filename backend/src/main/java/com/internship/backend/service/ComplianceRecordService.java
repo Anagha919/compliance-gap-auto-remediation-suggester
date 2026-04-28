@@ -4,6 +4,8 @@ import com.internship.backend.entity.ComplianceRecord;
 import com.internship.backend.exception.BadRequestException;
 import com.internship.backend.exception.ResourceNotFoundException;
 import com.internship.backend.repository.ComplianceRecordRepository;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,25 +19,30 @@ public class ComplianceRecordService {
         this.repository = repository;
     }
 
-    // CREATE
+    // ✅ CREATE
     public ComplianceRecord createRecord(ComplianceRecord record) {
         validate(record);
         return repository.save(record);
     }
 
-    // READ - ALL
+    // ✅ GET ALL (normal)
     public List<ComplianceRecord> getAllRecords() {
         return repository.findAll();
     }
 
-    // READ - BY ID
+    // ✅ GET ALL (pagination)
+    public Page<ComplianceRecord> getAllPaginated(Pageable pageable) {
+        return repository.findAll(pageable);
+    }
+
+    // ✅ GET BY ID
     public ComplianceRecord getById(Long id) {
         return repository.findById(id)
                 .orElseThrow(() ->
                         new ResourceNotFoundException("Record not found with id: " + id));
     }
 
-    // FILTER
+    // ✅ FILTER BY STATUS
     public List<ComplianceRecord> getByStatus(String status) {
         if (status == null || status.isBlank()) {
             throw new BadRequestException("Status must not be empty");
@@ -43,7 +50,7 @@ public class ComplianceRecordService {
         return repository.findByStatus(status);
     }
 
-    // UPDATE
+    // ✅ UPDATE
     public ComplianceRecord updateRecord(Long id, ComplianceRecord updated) {
         ComplianceRecord existing = getById(id);
 
@@ -63,13 +70,13 @@ public class ComplianceRecordService {
         return repository.save(existing);
     }
 
-    // DELETE
+    // ✅ DELETE
     public void deleteRecord(Long id) {
         ComplianceRecord record = getById(id);
         repository.delete(record);
     }
 
-    // 🔒 Validation logic (centralized)
+    // 🔒 VALIDATION LOGIC
     private void validate(ComplianceRecord record) {
         if (record == null) {
             throw new BadRequestException("Request body cannot be null");

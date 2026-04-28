@@ -1,6 +1,7 @@
 package com.internship.backend.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -21,17 +22,20 @@ public class ComplianceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @NotBlank(message = "Title is required")
     @Column(nullable = false)
     private String title;
 
     @Column(length = 1000)
     private String description;
 
+    @NotBlank(message = "Status is required")
     @Column(nullable = false)
-    private String status; // OPEN, CLOSED, IN_PROGRESS
+    private String status;
 
+    @NotBlank(message = "Severity is required")
     @Column(nullable = false)
-    private String severity; // LOW, MEDIUM, HIGH
+    private String severity;
 
     @Column(nullable = false)
     private String createdBy;

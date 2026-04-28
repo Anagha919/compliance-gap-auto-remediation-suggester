@@ -2,9 +2,12 @@ package com.internship.backend.controller;
 
 import com.internship.backend.entity.ComplianceRecord;
 import com.internship.backend.service.ComplianceRecordService;
+import jakarta.validation.Valid;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/records")
@@ -16,41 +19,22 @@ public class ComplianceRecordController {
         this.service = service;
     }
 
-    // CREATE
-    @PostMapping
-    public ComplianceRecord create(@RequestBody ComplianceRecord record) {
-        return service.createRecord(record);
+    // ✅ GET ALL (PAGINATED)
+    @GetMapping("/all")
+    public ResponseEntity<Page<ComplianceRecord>> getAll(Pageable pageable) {
+        return ResponseEntity.ok(service.getAllPaginated(pageable));
     }
 
-    // GET ALL
-    @GetMapping
-    public List<ComplianceRecord> getAll() {
-        return service.getAllRecords();
-    }
-
-    // GET BY ID
+    // ✅ GET BY ID (404 handled in service)
     @GetMapping("/{id}")
-    public ComplianceRecord getById(@PathVariable Long id) {
-        return service.getById(id);
+    public ResponseEntity<ComplianceRecord> getById(@PathVariable Long id) {
+        return ResponseEntity.ok(service.getById(id));
     }
 
-    // FILTER BY STATUS
-    @GetMapping("/status/{status}")
-    public List<ComplianceRecord> getByStatus(@PathVariable String status) {
-        return service.getByStatus(status);
-    }
-
-    // UPDATE
-    @PutMapping("/{id}")
-    public ComplianceRecord update(@PathVariable Long id,
-                                   @RequestBody ComplianceRecord record) {
-        return service.updateRecord(id, record);
-    }
-
-    // DELETE
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable Long id) {
-        service.deleteRecord(id);
-        return "Record deleted successfully";
+    // ✅ CREATE (VALIDATION)
+    @PostMapping("/create")
+    public ResponseEntity<ComplianceRecord> create(@Valid @RequestBody ComplianceRecord record) {
+        ComplianceRecord saved = service.createRecord(record);
+        return new ResponseEntity<>(saved, HttpStatus.CREATED);
     }
 }
