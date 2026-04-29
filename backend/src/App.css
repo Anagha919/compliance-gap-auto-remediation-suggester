@@ -1,0 +1,30 @@
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+:root {
+  --primary: #1B4F8A;
+}
+
+button {
+  background-color: var(--primary);
+  color: white;
+  border: none;
+  padding: 12px;
+  min-height: 44px; /* touch target */
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.container {
+  padding: 16px; /* 8px grid */
+}
+
+.card {
+  padding: 16px;
+  margin: 16px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
