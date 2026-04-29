@@ -76,7 +76,7 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- 🔴 Redis (optional for future use) -->
+        <!-- 🔴 Redis (optional future use) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
@@ -94,7 +94,7 @@
             <artifactId>spring-boot-starter-mail</artifactId>
         </dependency>
 
-        <!-- 🧾 Thymeleaf (Email Templates) -->
+        <!-- 🧾 Thymeleaf -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-thymeleaf</artifactId>
@@ -107,10 +107,17 @@
             <optional>true</optional>
         </dependency>
 
-        <!-- 🧪 Testing -->
+        <!-- 🧪 Testing (JUnit 5 included) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- 🔥 Mockito (IMPORTANT for your tests) -->
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-junit-jupiter</artifactId>
             <scope>test</scope>
         </dependency>
 

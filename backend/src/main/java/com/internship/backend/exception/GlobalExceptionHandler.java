@@ -5,28 +5,44 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.Map;
 
-@RestControllerAdvice
+@ControllerAdvice
 public class GlobalExceptionHandler {
 
+    // 🔥 404 - Resource not found
     @ExceptionHandler(ResourceNotFoundException.class)
-    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(Map.of(
+                        "timestamp", LocalDateTime.now(),
+                        "status", 404,
+                        "error", "Not Found",
+                        "message", ex.getMessage()
+                ));
     }
 
+    // 🔥 400 - Bad request
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<Map<String, Object>> handleBadRequest(BadRequestException ex) {
-        return buildResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    public ResponseEntity<?> handleBadRequest(BadRequestException ex) {
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "timestamp", LocalDateTime.now(),
+                        "status", 400,
+                        "error", "Bad Request",
+                        "message", ex.getMessage()
+                ));
     }
 
-    private ResponseEntity<Map<String, Object>> buildResponse(String message, HttpStatus status) {
-        Map<String, Object> body = new HashMap<>();
-        body.put("timestamp", LocalDateTime.now());
-        body.put("status", status.value());
-        body.put("error", message);
-
-        return new ResponseEntity<>(body, status);
+    // 🔥 500 - Internal error
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<?> handleGeneric(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(Map.of(
+                        "timestamp", LocalDateTime.now(),
+                        "status", 500,
+                        "error", "Internal Server Error",
+                        "message", ex.getMessage()
+                ));
     }
 }
