@@ -76,10 +76,28 @@
             <scope>runtime</scope>
         </dependency>
 
-        <!-- 🔴 Redis (Caching) -->
+        <!-- 🔴 Redis (optional for future use) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+
+        <!-- ⚡ Spring Cache -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-cache</artifactId>
+        </dependency>
+
+        <!-- 📧 Email -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-mail</artifactId>
+        </dependency>
+
+        <!-- 🧾 Thymeleaf (Email Templates) -->
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-thymeleaf</artifactId>
         </dependency>
 
         <!-- ⚡ Lombok -->

@@ -3,10 +3,12 @@ package com.internship.backend.entity;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.*;
+
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -22,28 +24,33 @@ public class ComplianceRecord {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotBlank(message = "Title is required")
-    @Column(nullable = false)
+    // 🔥 Title
+    @NotBlank(message = "Title cannot be empty")
     private String title;
 
-    @Column(length = 1000)
+    // 🔥 Description
     private String description;
 
-    @NotBlank(message = "Status is required")
-    @Column(nullable = false)
+    // 🔥 Status (OPEN / CLOSED)
+    @NotBlank(message = "Status cannot be empty")
     private String status;
 
-    @NotBlank(message = "Severity is required")
-    @Column(nullable = false)
+    // 🔥 Severity (LOW / MEDIUM / HIGH)
+    @NotBlank(message = "Severity cannot be empty")
     private String severity;
 
-    @Column(nullable = false)
+    // 🔥 Deadline (for alerts)
+    private LocalDate deadline;
+
+    // 🔥 Created by
     private String createdBy;
 
+    // 🔥 Created at (auto)
     @CreatedDate
-    @Column(nullable = false, updatable = false)
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
+    // 🔥 Updated at (auto)
     @LastModifiedDate
     private LocalDateTime updatedAt;
 }

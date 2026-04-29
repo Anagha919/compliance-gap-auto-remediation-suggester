@@ -18,7 +18,19 @@ spring:
         format_sql: true
 
   cache:
-    type: simple   # ✅ using in-memory cache (no Redis needed)
+    type: simple   # ✅ in-memory cache (no Redis needed)
+
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: anushagk04@gmail.com
+    password: jzednmfmauqvvfwf
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
 
 # 🔐 JWT
 jwt:
