@@ -1,65 +1,48 @@
 package com.internship.backend.controller;
 
-import com.internship.backend.config.JwtUtil;
 import com.internship.backend.entity.User;
 import com.internship.backend.service.AuthService;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.*;
 
-import java.util.Map;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/auth")
 public class AuthController {
 
     private final AuthService authService;
-    private final JwtUtil jwtUtil;
-    private final PasswordEncoder passwordEncoder;
 
-    public AuthController(AuthService authService,
-                          JwtUtil jwtUtil,
-                          PasswordEncoder passwordEncoder) {
+    public AuthController(AuthService authService) {
         this.authService = authService;
-        this.jwtUtil = jwtUtil;
-        this.passwordEncoder = passwordEncoder;
     }
 
-    // ✅ REGISTER
+    // 🔥 REGISTER
     @PostMapping("/register")
-    public User register(@RequestBody User user) {
-        return authService.register(user);
+    public ResponseEntity<?> register(@RequestBody User user) {
+
+        User createdUser = authService.register(user);
+
+        return ResponseEntity.ok(createdUser);
     }
 
-    // ✅ LOGIN
+    // 🔥 LOGIN
     @PostMapping("/login")
-    public Map<String, String> login(@RequestBody User user) {
+    public ResponseEntity<?> login(@RequestBody User user) {
 
-        User dbUser = authService.findByUsername(user.getUsername());
+        String token = authService.login(
+                user.getUsername(),
+                user.getPassword()
+        );
 
-        // 🔐 Compare encrypted password
-        if (!passwordEncoder.matches(user.getPassword(), dbUser.getPassword())) {
-            throw new RuntimeException("Invalid credentials");
-        }
-
-        String token = jwtUtil.generateToken(
-        dbUser.getUsername(),
-        dbUser.getRole()
-);
-
-        return Map.of("token", token);
+        return ResponseEntity.ok(token);
     }
 
-    // ✅ REFRESH TOKEN
+    // 🔥 REFRESH TOKEN
     @PostMapping("/refresh")
-    public Map<String, String> refresh(@RequestHeader("Authorization") String header) {
+    public ResponseEntity<?> refresh(@RequestParam String username) {
 
-        String token = header.replace("Bearer ", "");
-        String username = jwtUtil.extractUsername(token);
+        String newToken = authService.refreshToken(username);
 
-        String role = jwtUtil.extractRole(token);
-
-        String newToken = jwtUtil.generateToken(username, role);    
-
-        return Map.of("token", newToken);
+        return ResponseEntity.ok(newToken);
     }
 }

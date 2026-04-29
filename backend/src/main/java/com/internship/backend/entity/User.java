@@ -1,28 +1,32 @@
 package com.internship.backend.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 
 @Entity
+@Table(name = "users",
+       uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@Table(name = "users")
 public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    // 🔐 Unique username (DB-level safety)
+    @NotBlank(message = "Username cannot be empty")
+    @Column(nullable = false, unique = true)
     private String username;
 
-    @JsonIgnore   // 🔐 hide password in response
-    @Column(nullable = false)
+    // 🔐 Encrypted password
+    @NotBlank(message = "Password cannot be empty")
     private String password;
 
+    // 🔐 Role (ROLE_USER / ROLE_ADMIN)
     @Column(nullable = false)
-    private String role;   // 🔥 ROLE field (IMPORTANT)
+    private String role;
 }

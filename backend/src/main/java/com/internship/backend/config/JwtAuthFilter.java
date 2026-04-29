@@ -36,10 +36,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             String token = header.substring(7);
 
             try {
+                // 🔍 Extract data from token
                 String username = jwtUtil.extractUsername(token);
                 String role = jwtUtil.extractRole(token);
 
-                // 🔐 Create auth object with role
+                // 🔐 Create authentication object
                 UsernamePasswordAuthenticationToken auth =
                         new UsernamePasswordAuthenticationToken(
                                 username,
@@ -47,14 +48,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                                 List.of(new SimpleGrantedAuthority(role))
                         );
 
-                // 🔥 Set authentication in context
+                // ✅ Set authentication
                 SecurityContextHolder.getContext().setAuthentication(auth);
 
             } catch (Exception e) {
-                // invalid token → do nothing (will be unauthorized)
+                // 🔥 FIX: handle invalid/expired token gracefully
+                SecurityContextHolder.clearContext();
+                // Do NOT throw exception → request will be treated as unauthenticated (401)
             }
         }
 
+        // Continue filter chain
         filterChain.doFilter(request, response);
     }
 }
